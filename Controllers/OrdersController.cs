@@ -65,6 +65,8 @@ public class OrdersController : ControllerBase
         {
             var p = products[i.ProductId];
 
+            p.StockQuantity -= i.Quantity;
+
             order.Items.Add(new OrderItem
             {
                 ProductId = p.Id,
