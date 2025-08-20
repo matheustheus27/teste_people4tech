@@ -1,0 +1,30 @@
+version: "3.9"
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: teste_people4tech_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: teste_people4tech_db
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./Db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+
+  api:
+    build: .
+    container_name: teste_people4tech_api
+    ports:
+      - "5000:8080"
+    depends_on:
+      - db
+    environment:
+      ConnectionStrings__DefaultConnection: "server=db;port=3306;database=teste_people4tech_db;user=root;password=root"
+    restart: always
+
+volumes:
+  db_data:
